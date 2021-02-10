@@ -45,6 +45,9 @@ const config = {
       packageVersion: process.env.PACKAGE_VERSION || 'X-Package-Version',
       nodeVersion: process.env.NODE_VERSION || 'X-Node-Version'
     }
+  },
+  numbersApi: {
+    url: process.env.NUMBERS_API_URL
   }
 };
 
