@@ -20,6 +20,7 @@
     "start-dev": "nodemon --inspect server.js",
     "prestart-dev": "npm run lint",
     "migrations": "sequelize db:migrate",
+    "migrations-undo": "sequelize db:migrate:undo",
     "start": "node server.js",
     "seed": "sequelize db:seed:all",
     "create-seed": "sequelize seed:generate --name"
@@ -70,6 +71,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
+    "express-validator": "^6.9.2",
     "express-wolox-logger": "^2.0.0",
     "factory-girl": "^5.0.4",
     "jwt-simple": "^0.5.1",
