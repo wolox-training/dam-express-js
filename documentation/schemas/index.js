@@ -6,7 +6,10 @@ module.exports = {
     type: 'object',
     properties: {
       message: {
-        type: 'string'
+        type: 'array',
+        items: {
+          type: 'string'
+        }
       },
       internal_code: {
         type: 'string'
