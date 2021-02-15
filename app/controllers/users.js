@@ -6,7 +6,7 @@ const logger = require('../logger');
 const signUp = async (req, res, next) => {
   try {
     const userData = userMapper.signUp(req.body);
-    const newUser = await userService.persist(userData);
+    const newUser = await userService.create(userData);
     logger.info(`user with name: ${newUser.firstName} created successfully`);
     res.status(201).send(userSerializer.signUp(newUser));
   } catch (error) {

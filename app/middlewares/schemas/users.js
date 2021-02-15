@@ -1,7 +1,4 @@
-const { validationResult, checkSchema } = require('express-validator');
-const errors = require('../../errors');
-
-const domainValid = ['wolox.co', 'wolox.ar'];
+const { validDomains } = require('../../constants/domains');
 
 const userSignUp = {
   first_name: {
@@ -17,7 +14,7 @@ const userSignUp = {
     custom: {
       options: value => {
         const domain = value.split('@');
-        return domain[1] ? domainValid.includes(domain[1]) : true;
+        return domain[1] ? validDomains.includes(domain[1]) : true;
       },
       errorMessage: 'Email must be a wolox domain'
     }
@@ -36,20 +33,6 @@ const userSignUp = {
   }
 };
 
-const validateErrors = (next, errorsMessages) => {
-  if (errorsMessages.length === 0) {
-    next();
-  } else {
-    next(errors.badRequest(errorsMessages.map(error => error.msg)));
-  }
-};
-
-const validate = schema => [
-  checkSchema(schema),
-  (req, res, next) => validateErrors(next, validationResult(req).array())
-];
-
 module.exports = {
-  validate,
   userSignUp
 };
