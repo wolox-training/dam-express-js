@@ -16,6 +16,7 @@ const userSignUp = {
     },
     custom: {
       options: value => {
+        if (!value) return false;
         const domain = value.split('@');
         return domain[1] ? domainValid.includes(domain[1]) : true;
       },
