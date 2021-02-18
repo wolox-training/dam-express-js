@@ -14,8 +14,8 @@ const userSignUp = {
     custom: {
       options: value => {
         if (!value) return false;
-        const domain = value.split('@');
-        return domain[1] ? validDomains.includes(domain[1]) : true;
+        const [, domain] = value.split('@');
+        return domain ? validDomains.includes(domain) : true;
       },
       errorMessage: 'Email must be a wolox domain'
     }
