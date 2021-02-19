@@ -8,6 +8,9 @@ exports.config = {
 
     session: {
       secret: 'some-super-secret'
+    },
+    token: {
+      secret: 'some-super-token-secret'
     }
   }
 };
