@@ -2,6 +2,7 @@ const userService = require('../services/users');
 const userMapper = require('../mappers/users');
 const userSerializer = require('../serializers/users');
 const logger = require('../logger');
+const jwt = require('../helpers/jwt');
 
 const signUp = async (req, res, next) => {
   try {
@@ -15,6 +16,21 @@ const signUp = async (req, res, next) => {
   }
 };
 
+const signIn = (req, res, next) => {
+  try {
+    logger.info(`trying sign in: ${req.body.email}`);
+    const userFound = req.user;
+    logger.info(`generating token for user: ${req.body.email}`);
+    const token = jwt.encode({ userId: userFound.id, email: userFound.email });
+
+    res.status(200).send({ token });
+  } catch (error) {
+    logger.error(`Error signUp user: ${error.message}`);
+    next(error);
+  }
+};
+
 module.exports = {
-  signUp
+  signUp,
+  signIn
 };
