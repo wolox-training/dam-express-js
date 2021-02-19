@@ -7,7 +7,8 @@ module.exports = {
     database: config.name,
     host: config.host,
     port: config.port,
-    dialect: 'postgres'
+    dialect: 'postgres',
+    logging: false
   },
   testing: {
     username: config.username,

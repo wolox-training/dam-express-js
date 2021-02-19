@@ -8,6 +8,11 @@ const create = userData =>
     throw databaseError(`Cannot create user: ${error.message}`);
   });
 
+const findOne = query => User.findOne(query);
+
+const findByEmail = email => findOne({ where: { email } });
+
 module.exports = {
-  create
+  create,
+  findByEmail
 };
