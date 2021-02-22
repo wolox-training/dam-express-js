@@ -12,8 +12,6 @@ const statusCodes = {
 };
 
 exports.handle = (error, req, res, next) => {
-  // eslint-disable-next-line no-param-reassign
-  if (error.name && error.name === 'UnauthorizedError') error = errors.unauthorized(error.message);
   if (error.internalCode) res.status(statusCodes[error.internalCode] || DEFAULT_STATUS_CODE);
   else {
     // Unrecognized error, notifying it to rollbar.
@@ -23,3 +21,5 @@ exports.handle = (error, req, res, next) => {
   logger.error(error);
   return res.send({ message: error.message, internal_code: error.internalCode });
 };
+
+exports.handleAuthError = (error, req, res, next) => next(errors.unauthorized(error.message));
