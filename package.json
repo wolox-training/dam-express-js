@@ -62,7 +62,8 @@
       "!**/coverage/**",
       "!**/test/**",
       "!**/server.js",
-      "!**/apiInfo.js"
+      "!**/apiInfo.js",
+      "!**/documentation/**"
     ],
     "setupFilesAfterEnv": [
       "<rootDir>/test/setup.js"
@@ -77,6 +78,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
+    "express-jwt": "^6.0.0",
     "express-validator": "^6.9.2",
     "express-wolox-logger": "^2.0.0",
     "factory-girl": "^5.0.4",

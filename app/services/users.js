@@ -1,18 +1,19 @@
 const { User } = require('../models');
-const { databaseError } = require('../errors');
-const logger = require('../logger');
+const { handleDatabaseError } = require('../helpers/errors');
 
-const create = userData =>
-  User.create(userData).catch(error => {
-    logger.error(`Error creating user: ${error.message}`);
-    throw databaseError(`Cannot create user: ${error.message}`);
-  });
+const create = userData => User.create(userData).catch(handleDatabaseError('Error creating user'));
 
 const findOne = query => User.findOne(query);
 
 const findByEmail = email => findOne({ where: { email } });
 
+const getAll = ({ offset, limit }) =>
+  User.findAll({ offset, limit, attributes: { exclude: ['password'] } }).catch(
+    handleDatabaseError('Error getting all users')
+  );
+
 module.exports = {
   create,
+  getAll,
   findByEmail
 };

@@ -6,6 +6,7 @@ const DEFAULT_STATUS_CODE = 500;
 const statusCodes = {
   [errors.DATABASE_ERROR]: 503,
   [errors.BAD_REQUEST]: 400,
+  [errors.UNAUTHORIZED]: 401,
   [errors.NOT_FOUND]: 404,
   [errors.DEFAULT_ERROR]: 500
 };
@@ -20,3 +21,5 @@ exports.handle = (error, req, res, next) => {
   logger.error(error);
   return res.send({ message: error.message, internal_code: error.internalCode });
 };
+
+exports.handleAuthError = (error, req, res, next) => next(errors.unauthorized(error.message));

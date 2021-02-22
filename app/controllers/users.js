@@ -30,7 +30,18 @@ const signIn = (req, res, next) => {
   }
 };
 
+const getAll = async ({ query }, res, next) => {
+  try {
+    const users = await userService.getAll(query);
+    res.status(200).send(users);
+  } catch (error) {
+    logger.error(`Error get all users: ${error.message}`);
+    next(error);
+  }
+};
+
 module.exports = {
   signUp,
-  signIn
+  signIn,
+  getAll
 };
