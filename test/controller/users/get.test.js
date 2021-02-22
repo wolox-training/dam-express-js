@@ -138,37 +138,4 @@ describe('/users list all users', () => {
       });
     });
   });
-
-  //   describe("user doesn't exists", () => {
-  //     let response = {};
-  //     beforeAll(async () => {
-  //       response = await request.post(`${endpoint}/sessions`).send(userSignIn.wrongPassword);
-  //     });
-  //     test('Should return server status bad request', () => {
-  //       expect(response.status).toBe(404);
-  //     });
-  //     test('Should return a internal_code with not_found', () => {
-  //       expect(response.body).toMatchObject(not_found);
-  //     });
-  //     test('Should have message error about user or password invalid', () => {
-  //       expect(response.body.message).toContain('invalid email or password');
-  //     });
-  //   });
-
-  //   describe('user exist but password is incorrect', () => {
-  //     let response = {};
-  //     beforeAll(async () => {
-  //       await createUser({ email: userSignIn.wrongPassword.email });
-  //       response = await request.post(`${endpoint}/sessions`).send(userSignIn.wrongPassword);
-  //     });
-  //     test('Should return server status not found', () => {
-  //       expect(response.status).toBe(404);
-  //     });
-  //     test('Should return a internal_code with not_found', () => {
-  //       expect(response.body).toMatchObject(not_found);
-  //     });
-  //     test('Should have message error about user or password invalid', () => {
-  //       expect(response.body.message).toContain('invalid email or password');
-  //     });
-  //   });
 });
