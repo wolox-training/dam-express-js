@@ -1,3 +1,5 @@
+const { TOKEN_ALGORITHMS } = require('../app/constants/algorithms');
+
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
 
 // eslint-disable-next-line global-require
@@ -38,7 +40,8 @@ const config = {
     },
     session: {
       header_name: 'authorization',
-      secret: process.env.NODE_API_SESSION_SECRET
+      secret: process.env.NODE_API_SESSION_SECRET,
+      algorithms: TOKEN_ALGORITHMS
     },
     headers: {
       apiDate: process.env.API_DATE || 'X-API-Date',

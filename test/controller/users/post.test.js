@@ -11,6 +11,7 @@ const endpoint = '/users';
 const bad_request = {
   internal_code: 'bad_request'
 };
+
 const not_found = {
   internal_code: 'not_found'
 };

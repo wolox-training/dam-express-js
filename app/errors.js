@@ -17,3 +17,6 @@ exports.badRequest = message => internalError(message, exports.BAD_REQUEST);
 
 exports.NOT_FOUND = 'not_found';
 exports.notFound = message => internalError(message, exports.NOT_FOUND);
+
+exports.UNAUTHORIZED = 'unauthorized';
+exports.unauthorized = message => internalError(message, exports.UNAUTHORIZED);

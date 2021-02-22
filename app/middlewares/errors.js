@@ -6,11 +6,14 @@ const DEFAULT_STATUS_CODE = 500;
 const statusCodes = {
   [errors.DATABASE_ERROR]: 503,
   [errors.BAD_REQUEST]: 400,
+  [errors.UNAUTHORIZED]: 401,
   [errors.NOT_FOUND]: 404,
   [errors.DEFAULT_ERROR]: 500
 };
 
 exports.handle = (error, req, res, next) => {
+  // eslint-disable-next-line no-param-reassign
+  if (error.name && error.name === 'UnauthorizedError') error = errors.unauthorized(error.message);
   if (error.internalCode) res.status(statusCodes[error.internalCode] || DEFAULT_STATUS_CODE);
   else {
     // Unrecognized error, notifying it to rollbar.
