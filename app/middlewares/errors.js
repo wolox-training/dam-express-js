@@ -7,6 +7,7 @@ const statusCodes = {
   [errors.DATABASE_ERROR]: 503,
   [errors.BAD_REQUEST]: 400,
   [errors.UNAUTHORIZED]: 401,
+  [errors.FORBIDDEN]: 403,
   [errors.NOT_FOUND]: 404,
   [errors.DEFAULT_ERROR]: 500
 };
@@ -22,4 +23,12 @@ exports.handle = (error, req, res, next) => {
   return res.send({ message: error.message, internal_code: error.internalCode });
 };
 
-exports.handleAuthError = (error, req, res, next) => next(errors.unauthorized(error.message));
+exports.handleAuthError = (error, req, res, next) => {
+  if (error.name && error.name === 'UnauthorizedError') return next(errors.unauthorized(error.message));
+  return next(error);
+};
+
+exports.handlePermissionsError = (error, req, res, next) => {
+  if (error.name && error.name === 'UnauthorizedError') return next(errors.forbidden(error.message));
+  return next(error);
+};

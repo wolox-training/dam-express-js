@@ -2,6 +2,10 @@ const { User } = require('../models');
 const { handleDatabaseError } = require('../helpers/errors');
 
 const create = userData => User.create(userData).catch(handleDatabaseError('Error creating user'));
+const upsert = (userData, fieldsUpdated) =>
+  User.upsert(userData, { fields: fieldsUpdated }).catch(
+    handleDatabaseError('Error creating/updating admin user')
+  );
 
 const findOne = query => User.findOne(query);
 
@@ -15,5 +19,6 @@ const getAll = ({ offset, limit }) =>
 module.exports = {
   create,
   getAll,
-  findByEmail
+  findByEmail,
+  upsert
 };
