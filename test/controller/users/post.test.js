@@ -1,8 +1,11 @@
+/* eslint-disable max-lines */
 const supertest = require('supertest');
+
 const app = require('../../../app');
 const { create: createUser } = require('../../factories/users');
 const jwt = require('../../../app/helpers/jwt');
 const { User } = require('../../../app/models');
+const { ADMIN, USER } = require('../../../app/constants/rols');
 
 const request = supertest(app);
 
@@ -19,6 +22,9 @@ const not_found = {
 const database_error = {
   internal_code: 'database_error'
 };
+// const unauthorized = {
+//   internal_code: 'unauthorized'
+// };
 
 const userValidInfo = {
   request: {
@@ -34,6 +40,14 @@ const userValidInfo = {
   }
 };
 
+const unauthorized = {
+  internal_code: 'unauthorized'
+};
+
+const forbidden = {
+  internal_code: 'forbidden'
+};
+
 const userSignIn = {
   wrongPassword: {
     email: 'noexist@wolox.co',
@@ -44,6 +58,8 @@ const userSignIn = {
     password: '12345678'
   }
 };
+
+const adminToken = jwt.encode({ permissions: [ADMIN] });
 
 describe('/users create user', () => {
   describe('successful cases', () => {
@@ -140,7 +156,11 @@ describe('/users/sessions sign up', () => {
     });
     test('Should return a token with email and id', () => {
       const payloadToken = jwt.decoded(response.body.token);
-      expect(payloadToken).toStrictEqual({ userId: userInserted.id, email: userInserted.email });
+      expect(payloadToken).toStrictEqual({
+        userId: userInserted.id,
+        email: userInserted.email,
+        permissions: [USER]
+      });
     });
   });
   describe('failure cases', () => {
@@ -202,6 +222,129 @@ describe('/users/sessions sign up', () => {
       });
       test('Should have message error about user or password invalid', () => {
         expect(response.body.message).toContain('invalid email or password');
+      });
+    });
+  });
+});
+
+describe('/admin/users sign up admin', () => {
+  describe('successful cases', () => {
+    describe("when user does'n exists", () => {
+      let response = {};
+
+      beforeAll(async () => {
+        response = await request
+          .post(`/admin${endpoint}`)
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send(userValidInfo.request);
+      });
+      test('Should return server status created', () => {
+        expect(response.status).toBe(201);
+      });
+    });
+  });
+  describe('failure cases', () => {
+    describe('body empty schema validations', () => {
+      let response = {};
+      beforeAll(async () => {
+        response = await request
+          .post(`/admin${endpoint}`)
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send({});
+      });
+      test('Should return server status bad request', () => {
+        expect(response.status).toBe(400);
+      });
+      test('Should return a internal_code with bad_request', () => {
+        expect(response.body).toMatchObject(bad_request);
+      });
+      test('Should message to be an array', () => {
+        expect(response.body.message).toBeInstanceOf(Array);
+      });
+      test('Should have message error about email must be valid', () => {
+        expect(response.body.message).toContain('Email must be a valid email');
+      });
+      test('Should have message error about email must be a wolox domain', () => {
+        expect(response.body.message).toContain('Email must be a wolox domain');
+      });
+      test('Should have message error about password must be at least 8 characters', () => {
+        expect(response.body.message).toContain('password must be at least 8 characters');
+      });
+      test('Should have message error about passwrod must be alphanumeric', () => {
+        expect(response.body.message).toContain('password must have only alphanumeric characters');
+      });
+    });
+
+    describe("token don't send", () => {
+      let response = {};
+      beforeAll(async () => {
+        response = await request.post(`/admin${endpoint}`).send(userValidInfo.request);
+      });
+      test('Should return server status unauthorized', () => {
+        expect(response.status).toBe(401);
+      });
+      test('Should return a internal_code with unauthorized', () => {
+        expect(response.body).toMatchObject(unauthorized);
+      });
+      test('Should have message error about token not found', () => {
+        expect(response.body.message).toContain('No authorization token was found');
+      });
+    });
+    describe('token malformed', () => {
+      let response = {};
+      beforeAll(async () => {
+        response = await request
+          .post(`/admin${endpoint}`)
+          .set('Authorization', 'Bearer ZZZZZZ')
+          .send(userValidInfo.request);
+      });
+      test('Should return server status unauthorized', () => {
+        expect(response.status).toBe(401);
+      });
+      test('Should return a internal_code with unauthorized', () => {
+        expect(response.body).toMatchObject(unauthorized);
+      });
+      test('Should have message error about token malformed', () => {
+        expect(response.body.message).toContain('jwt malformed');
+      });
+    });
+
+    describe('token invalid', () => {
+      let response = {};
+      beforeAll(async () => {
+        response = await request
+          .post(`/admin${endpoint}`)
+          .set('Authorization', 'Bearer XXX.YYY.ZZZZ')
+          .send(userValidInfo.request);
+      });
+      test('Should return server status unauthorized', () => {
+        expect(response.status).toBe(401);
+      });
+      test('Should return a internal_code with unauthorized', () => {
+        expect(response.body).toMatchObject(unauthorized);
+      });
+      test('Should have message error about invalid token', () => {
+        expect(response.body.message).toContain('invalid token');
+      });
+    });
+
+    describe("token haven't correct permissions", () => {
+      let response = {};
+      beforeAll(async () => {
+        const tokenUser = jwt.encode({ permissions: [USER] });
+        response = await request
+          .post(`/admin${endpoint}`)
+          .set('Authorization', `Bearer ${tokenUser}`)
+          .send(userValidInfo.request);
+      });
+      test('Should return server status forbbiden', () => {
+        expect(response.status).toBe(403);
+      });
+      test('Should return a internal_code with forbidden', () => {
+        expect(response.body).toMatchObject(forbidden);
+      });
+      test('Should have message error about permissions denied', () => {
+        expect(response.body.message).toContain('Permission denied');
       });
     });
   });

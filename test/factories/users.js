@@ -1,5 +1,6 @@
 const { factory } = require('factory-girl');
 const faker = require('faker');
+const { USER } = require('../../app/constants/rols');
 
 const db = require('../../app/models');
 
@@ -8,7 +9,8 @@ factory.define('User', db.User, {
   firstName: faker.name.firstName(),
   lastName: faker.name.lastName(),
   email: factory.sequence('user.email', n => `${faker.internet.userName().toLowerCase()}${n}@wolox.co`),
-  password: faker.internet.password(10, false, /[0-9A-Z]/)
+  password: faker.internet.password(10, false, /[0-9A-Z]/),
+  rol: USER
 });
 
 exports.build = () => factory.build('User');

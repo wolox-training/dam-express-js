@@ -79,6 +79,7 @@
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "express-jwt": "^6.0.0",
+    "express-jwt-permissions": "^1.3.3",
     "express-validator": "^6.9.2",
     "express-wolox-logger": "^2.0.0",
     "factory-girl": "^5.0.4",
