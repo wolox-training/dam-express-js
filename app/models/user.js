@@ -47,5 +47,9 @@ module.exports = (sequelize, DataTypes) => {
   User.beforeUpdate(hashPassword);
   User.prototype.isCorrectPassword = isCorrectPassword;
 
+  User.associate = models => {
+    User.hasMany(models.Weet);
+  };
+
   return User;
 };
