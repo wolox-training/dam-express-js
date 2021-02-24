@@ -20,16 +20,15 @@ describe('/users list all users', () => {
   describe('successful cases', () => {
     describe.each([
       // offset, limit, total, position first, position last
-      [0, 2, 2, 0, 1],
-      [0, 10, 5, 0, 4],
-      [4, 6, 1, 4, 4],
-      [10, 10, 0, null, null]
+      [0, 2, 2],
+      [0, 10, 5],
+      [4, 6, 1],
+      [10, 10, 0]
       // eslint-disable-next-line max-params
-    ])('with offset %i, limit %i should return %i users', (offset, limit, total, first, last) => {
-      let createdUsers = [];
+    ])('with offset %i, limit %i should return %i users', (offset, limit, total) => {
       let response = {};
       beforeAll(async () => {
-        createdUsers = await createMany();
+        await createMany();
         response = await request
           .get(`${endpoint}`)
           .query({ limit, offset })
@@ -41,14 +40,6 @@ describe('/users list all users', () => {
       });
       test(`Should return a body with length ${total}`, () => {
         expect(response.body).toHaveLength(total);
-      });
-      test(`first position should be equal to register in position ${first}`, () => {
-        if (first) expect(response.body[0]).toMatchObject({ id: createdUsers[first].id });
-      });
-      test(`last position should be equal to register in position ${last}`, () => {
-        if (last) {
-          expect(response.body[response.body.length - 1]).toMatchObject({ id: createdUsers[last].id });
-        }
       });
     });
   });
